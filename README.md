@@ -2,6 +2,6 @@ Hi, this bot helps to easily send answers in famous game What? Where? When? Afte
 
 # Features 
 [x] Register your team to the bot before the competition  
-[ ] Answer to the telegram bot  
-[ ] Admin can limit when it is allowed to answer to the question  
+[x] Answer to the telegram bot  
+[x] Admin can limit when it is allowed to answer to the question  
 [ ] Questions are saved to the google docs table  
