@@ -1,0 +1,5 @@
+TOKEN : str = ""
+
+GAMEMASTER_TELEGRAM_ID : int = 0
+
+SECRET_CODE : str = "BANANA"
