@@ -88,11 +88,12 @@ def start_answers_collection(msg: telebot.types.Message):
     gm.start_answers_collection()
     args = msg.text.split()[1:]
     if len(args) == 2 and args[0].isdigit() and args[1].isdigit():
-        time_to_anwer = str(args[0])
-        seconds_to_submit = str(args[1])
+        time_to_answer = int(args[0])
+        seconds_to_submit = int(args[1])
+        bot.reply_to(msg, f"Начат сбор ответов. Время на запись ответов {time_to_answer} секунд, командам будет выслано предупреждение за {seconds_to_submit} секунд")
         for captain_id in teams.keys():
-            bot.send_message(captain_id, f"Вы можете отвечать. На ответ вам данно {time_to_anwer} секунд")
-        time.sleep(time_to_anwer - seconds_to_submit)
+            bot.send_message(captain_id, f"Вы можете отвечать. На ответ вам данно {time_to_answer} секунд")
+        time.sleep(time_to_answer - seconds_to_submit)
         end_answers_collection(msg, seconds_to_submit) 
     else:
         bot.reply_to(msg, "Начат сбор ответов, чтобы закончить вызовите команду /end_answers_collection")
