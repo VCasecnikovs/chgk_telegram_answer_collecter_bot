@@ -82,19 +82,29 @@ def collect_answer(msg : telebot.types.Message):
         bot.reply_to(msg, f"Ваш ответ ->{msg.text}<- получен")
     answers[msg.from_user.id] = msg.text
 
+#You can have two parameters, amount of time to answer the question and amount of time before request to submit the answers
 @bot.message_handler(commands=["allow_answering"], func=lambda  msg: get_user_status(msg) == USER_STATUS.GAMEMASTER)
-def start_answers_collection(msg):
+def start_answers_collection(msg: telebot.types.Message):
     gm.start_answers_collection()
-    bot.reply_to(msg, "Начат сбор ответов")
-    for captain_id in teams.keys():
-        bot.send_message(captain_id, f"Вы можете отвечать")
+    args = msg.text.split()[1:]
+    if len(args) == 2 and args[0].isdigit() and args[1].isdigit():
+        time_to_anwer = str(args[0])
+        seconds_to_submit = str(args[1])
+        for captain_id in teams.keys():
+            bot.send_message(captain_id, f"Вы можете отвечать. На ответ вам данно {time_to_anwer} секунд")
+        time.sleep(time_to_anwer - seconds_to_submit)
+        end_answers_collection(msg, seconds_to_submit) 
+    else:
+        bot.reply_to(msg, "Начат сбор ответов, чтобы закончить вызовите команду /end_answers_collection")
+        for captain_id in teams.keys():
+            bot.send_message(captain_id, f"Вы можете отвечать")
     
 @bot.message_handler(commands=["end_answers_collection"], func=lambda  msg: get_user_status(msg) == USER_STATUS.GAMEMASTER)
-def end_answers_collection(msg: Union[telebot.types.Message, None], time_left_seconds: int = 10):
+def end_answers_collection(msg: telebot.types.Message, seconds_to_submit: int = 10):
     bot.reply_to(msg, f"Начат обратный отчёт")
     for captain_id in teams.keys():
-        bot.send_message(captain_id, f"Осталось {time_left_seconds} до сдачи ответа")
-    time.sleep(time_left_seconds)
+        bot.send_message(captain_id, f"Осталось {seconds_to_submit} до сдачи ответа")
+    time.sleep(seconds_to_submit)
     gm.end_answers_collection()
     for captain_id in teams.keys():
         answer = answers.get(captain_id)
